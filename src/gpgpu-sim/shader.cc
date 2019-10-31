@@ -2021,12 +2021,15 @@ bool ldst_unit::tlb_cycle(warp_inst_t &inst, mem_stage_stall_type &stall_reason,
     enum cache_request_status status = m_tlb->access(mf->get_addr(), mf, gpu_sim_cycle + gpu_tot_sim_cycle, events);
     if (mf->get_tlb() == true)
     {
-        if ((tlb_latency_queue[19]) == NULL)
+        if ((tlb_latency_queue[m_config->m_tlb_config.tlb_latency - 1]) == NULL)
         {
             //fprintf(stdout, "Inserting mf in tlb called");
-            tlb_latency_queue[19] = mf;
+            tlb_latency_queue[m_config->m_tlb_config.tlb_latency - 1] = mf;
         }
     }
+	else{ 
+		delete (mf);
+	}
     //return 1;
     if (status != HIT)
     {
@@ -2627,7 +2630,8 @@ void ldst_unit::cycle()
 
         if (tlb_latency_queue[0] != NULL)
         {
-            m_tlb->fill(tlb_latency_queue[0], gpu_sim_cycle + gpu_tot_sim_cycle);
+            m_tlb->fill(tlb_latency_queue[0], gpu_sim_cycle + gpu_tot_sim_cycle) ;
+	    delete (tlb_latency_queue[0]);
             tlb_latency_queue[0] = NULL;
         }
 
