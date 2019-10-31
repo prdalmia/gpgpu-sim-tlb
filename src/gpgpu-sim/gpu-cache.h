@@ -910,7 +910,6 @@ public:
         m_valid = true;
         m_atom_sz = (m_cache_type == SECTOR)? SECTOR_SIZE : m_line_sz;
         original_m_assoc = m_assoc;
-	     tlb_latency = 20;
   
 	}
     unsigned tlb_latency;
